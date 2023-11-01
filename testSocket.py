@@ -2,6 +2,7 @@
 #Code by MegaKG
 import datetime
 import Pages
+import time
 
 MSG = """
 <html>
@@ -11,23 +12,18 @@ MSG = """
 
 <script>
 var socket = new WebSocket("ws://127.0.0.1:8080/socket");
-function gettime(){
-    socket.send('Hello');
-}
 
 socket.onmessage = function(event){
-    document.getElementById('timediv').innerHTML = event.data;
+    document.getElementById('timediv').innerHTML = "<h1>" + event.data + "</h1>";
 }
 </script>
-
-<button onclick='gettime()'>Get Time!</button>
 
 </body>
 </html>
         """
 
 class page(Pages.webpage):
-    def connect(self):
+    def connect(self,Request):
         self.sendCode(200)
         self.sendLength(len(MSG))
         self.sendType("text/html")
@@ -37,11 +33,11 @@ class page(Pages.webpage):
 
 
 
-    def websocket(self):
+    def websocket(self,Request):
         print("Socket Listener Running")
         CON = self.getConnectionObject()
         while True:
             #Get the Response
-            IN = CON.getdat()
-            print("Socket IN",IN)
+            #IN = CON.getdat()
             CON.sendstdat("The Time Is " + str(datetime.datetime.now()))
+            time.sleep(0.05)

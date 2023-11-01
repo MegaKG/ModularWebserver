@@ -4,7 +4,7 @@
 import Pages
 
 class e404(Pages.webpage):
-    def connect(self):
+    def connect(self,Request):
         self.sendCode(404)
         self.sendLength(54)
         self.sendType('text/html')
@@ -12,7 +12,7 @@ class e404(Pages.webpage):
         self.print("<html><body><h3>404, Page Not Found</h3></body></html>")
 
 class e500(Pages.webpage):
-    def connect(self):
+    def connect(self,Request):
         self.sendCode(500)
         self.sendType('text/html')
 

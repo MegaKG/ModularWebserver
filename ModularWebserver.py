@@ -108,7 +108,7 @@ class webServer:
                                     #Now we begin websocket
                                     try:
                                         MyPage.acceptConnection(CON)
-                                        MyPage.websocket()
+                                        MyPage.websocket(ParsedOptions)
                                     except OSError:
                                         print(IDENTIFIER,"Websocket Died")
                                 else:
@@ -118,7 +118,7 @@ class webServer:
                         else:
                             #Respond with the requested resource
                             MyPage.acceptConnection(CON)
-                            MyPage.connect()
+                            MyPage.connect(ParsedOptions)
 
                     #Otherwise, handle it
                     else:
@@ -126,21 +126,21 @@ class webServer:
                         if self.CatchallPage is not None:
                             #Server Catchall page
                             print(IDENTIFIER,"Redirect to Catchall")
-                            self.CatchallPage.connect()
+                            self.CatchallPage.connect(ParsedOptions)
 
                         else:
                             #The Default 404 Handler
                             print(IDENTIFIER,"404 for",Resource)
-                            page = DefaultErrors.e404(ParsedOptions)
+                            page = DefaultErrors.e404(None)
                             page.acceptConnection(CON)
-                            page.connect()
+                            page.connect(ParsedOptions)
 
                 except Exception as E:
                     #The Default 500 Handler
                     print(ID,"ERROR 500",E)
                     page = DefaultErrors.e500(None)
                     page.acceptConnection(CON)
-                    page.connect()
+                    page.connect(ParsedOptions)
                     #raise E
 
         except tls.ssl.SSLError:

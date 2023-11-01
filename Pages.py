@@ -53,10 +53,10 @@ class webpage:
     
 
     #These are User replacable functions in the child classes
-    def connect(self):
+    def connect(self,Request):
         pass
 
-    def webSocket(self):
+    def webSocket(self,Request):
         self.close()
 
     
