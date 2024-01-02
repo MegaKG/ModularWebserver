@@ -199,11 +199,13 @@ if __name__ == '__main__':
     import testPageLength
     import testPageNoLength
     import testSocket
+    import testSocketLength
 
     serv = webServer(PageMap = {
         '/':testPageLength.page(None),
         '/nl':testPageNoLength.page(None),
         '/sk':testSocket.page(None),
-        '/socket':testSocket.page(None)
+        '/socket':testSocket.page(None),
+        '/lengthsock':testSocketLength.page(None)
     })
     serv.run()
