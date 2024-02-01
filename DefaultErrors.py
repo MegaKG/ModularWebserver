@@ -17,3 +17,10 @@ class e500(Pages.webpage):
         self.sendType('text/html')
 
         self.print("<html><body><h3>500, Internal Server Error</h3></body></html>")
+
+class e401(Pages.webpage):
+    def connect(self,Request):
+        self.sendCode(401)
+        self.sendType('text/html')
+
+        self.print("<html><body><h3>401, Not Authorised</h3></body></html>")

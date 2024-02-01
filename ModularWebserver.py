@@ -78,24 +78,27 @@ class webServer:
 
 
                 #print(IDENTIFIER, "Got Request")
+                #Parse the raw request and get both the resource and the variable values
                 try:
-                    #Parse the raw request and get both the resource and the variable values
-                    ParsedOptions,Resource = self.Parser.parseRequest(Request)
-                    ParsedOptions['Resource'] = Resource
+                    ParsedOptions = self.Parser.parseRequest(Request)
+                except Exception as E:
+                    print("Header Error",E)
+                    break
 
+                try:
                     #Keep a record of this transaction
-                    print(IDENTIFIER,"has requested",Resource)
+                    print(IDENTIFIER,"has requested",ParsedOptions.getResource())
 
                     #Determine type of Response
                     #First check if the resource exists
-                    if Resource in self.PageObjects:
+                    if ParsedOptions.getResource() in self.PageObjects:
                         #Get the Resource
-                        MyPage = self.PageObjects[Resource]
+                        MyPage = self.PageObjects[ParsedOptions.getResource()]
 
                         #Handle Websocket if needed
-                        if 'Upgrade' in ParsedOptions.keys():
+                        if 'Upgrade' in ParsedOptions.getHeaderNames():
                             #If a websocket is wanted
-                            if ParsedOptions['Upgrade'] == b'websocket':
+                            if ParsedOptions.getHeader('Upgrade') == 'websocket':
                                 if self.AllowWebsocket:
                                     print(IDENTIFIER,"Upgrading to Websocket")
                                     #Do the special magic that prevents Caching
@@ -130,7 +133,7 @@ class webServer:
 
                         else:
                             #The Default 404 Handler
-                            print(IDENTIFIER,"404 for",Resource)
+                            print(IDENTIFIER,"404 for",ParsedOptions.getResource())
                             page = DefaultErrors.e404(None)
                             page.acceptConnection(CON)
                             page.connect(ParsedOptions)
@@ -141,7 +144,8 @@ class webServer:
                     page = DefaultErrors.e500(None)
                     page.acceptConnection(CON)
                     page.connect(ParsedOptions)
-                    #raise E
+                    raise
+                    
 
         except tls.ssl.SSLError:
             print(ID,"CertError")
@@ -200,12 +204,16 @@ if __name__ == '__main__':
     import testPageNoLength
     import testSocket
     import testSocketLength
+    import testPageData
+    import test401Auth
 
     serv = webServer(PageMap = {
         '/':testPageLength.page(None),
         '/nl':testPageNoLength.page(None),
         '/sk':testSocket.page(None),
         '/socket':testSocket.page(None),
-        '/lengthsock':testSocketLength.page(None)
+        '/lengthsock':testSocketLength.page(None),
+        '/testdata':testPageData.page(None),
+        '/basicauth':test401Auth.page(None)
     })
     serv.run()

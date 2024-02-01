@@ -29,6 +29,17 @@ class webpage:
     def sendHeader(self,Key,Value):
         self._Connection.sendstdat("{}: {}\n".format(Key,Value))
 
+    #Create a cookie
+    def setCookie(self,Key,Value,additionalOptions = []):
+        if len(additionalOptions) > 0:
+            Data = "Set-Cookie", "{}={};".format(Key,Value)
+            for option in additionalOptions:
+                Data += option + ';'
+            self.sendHeader(Data)
+        else:
+            self.sendHeader("Set-Cookie", "{}={}".format(Key,Value))
+
+
     #Makes life easy for page generation
     def print(self,*IN):
         OUTST = ''
