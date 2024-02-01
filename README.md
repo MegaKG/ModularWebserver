@@ -6,5 +6,5 @@ Usage:
 - The main library file is 'ModularWebserver.py'
 
 To Do: (Coming Soon)
-- Basic (htaccess like) 401 Challenge Authentication
+- Basic (htaccess like) 401 Digest Auth
 - Security Hardening
