@@ -23,19 +23,19 @@ socket.onmessage = function(event){
         """
 
 class page(Pages.webpage):
-    def connect(self,Request):
-        self.sendCode(200)
-        self.sendLength(len(MSG))
-        self.sendType("text/html")
+    def connect(self,Request: Pages.Connection):
+        Request.sendCode(200)
+        Request.sendLength(len(MSG))
+        Request.sendType("text/html")
 
-        self.print(MSG)
-
-
+        Request.print(MSG)
 
 
-    def websocket(self,Request):
+
+
+    def websocket(self,Request: Pages.Connection):
         print("Socket Listener Running")
-        CON = self.getConnectionObject()
+        CON = Request.getConnectionObject()
         for i in range(70000):
             #Get the Response
             #IN = CON.getdat()

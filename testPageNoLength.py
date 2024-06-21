@@ -5,9 +5,9 @@ import Pages
 
 #Refer to Pages
 class page(Pages.webpage):
-    def connect(self,Request):
-        self.sendCode('200 OK')
-        self.sendType("text/html")
+    def connect(self,Request: Pages.Connection):
+        Request.sendCode('200 OK')
+        Request.sendType("text/html")
 
-        self.print("<html><h2>Hello World - No Length</h2><br><pre>{}</pre></html>".format(str(Request)))
-        self.close()
+        Request.print("<html><h2>Hello World - No Length</h2><br><pre>{}</pre></html>".format(str(Request)))
+        Request.close()

@@ -41,31 +41,31 @@ Last Value 2: {}
 
 #Refer to Pages
 class page(Pages.webpage):
-    def connect(self,Request):
+    def connect(self,Request: Pages.Connection):
         t = str(time.time())
-        self.sendCode(200)
+        Request.sendCode(200)
 
-        self.setCookie('t5',t + 't5')
-        self.setCookie('t6',t + 't6')
+        Request.setCookie('t5',t + 't5')
+        Request.setCookie('t6',t + 't6')
 
-        self.sendType("text/html")
+        Request.sendType("text/html")
 
         
 
-        self.print(TestPage.format(
-            Request.getVariable('t1'),
-            Request.getVariable('t2'),
+        Request.print(TestPage.format(
+            Request.getRequestHeader().getVariable('t1'),
+            Request.getRequestHeader().getVariable('t2'),
             t + 't1',
             t + 't2',
 
-            Request.getVariable('t3'),
-            Request.getVariable('t4'),
+            Request.getRequestHeader().getVariable('t3'),
+            Request.getRequestHeader().getVariable('t4'),
             t + 't3',
             t + 't4',
 
-            Request.getCookie('t5'),
-            Request.getCookie('t6')
+            Request.getRequestHeader().getCookie('t5'),
+            Request.getRequestHeader().getCookie('t6')
         ))
 
 
-        self.close()
+        Request.close()

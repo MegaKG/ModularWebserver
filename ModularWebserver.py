@@ -8,6 +8,7 @@ import TLSwrapper2 as tls #This converts TCP sockets from the above library to S
 import WebsocketUtils #Handler for Websocket magic 
 import DefaultErrors #Web Pages for Default Errors
 import RequestParsers #Parses POST and GET Requests
+import Pages
 
 #Import standard library things
 import threading #Used to start handlers for clients after they have connected
@@ -89,6 +90,9 @@ class webServer:
                     #Keep a record of this transaction
                     print(IDENTIFIER,"has requested",ParsedOptions.getResource())
 
+                    #Generate Connection Object
+                    Connection = Pages.Connection(CON,ParsedOptions)
+
                     #Determine type of Response
                     #First check if the resource exists
                     if ParsedOptions.getResource() in self.PageObjects:
@@ -107,11 +111,11 @@ class webServer:
 
                                     #Convert CON to something usable
                                     CON = WebsocketUtils.wrappedConnection(CON)
+                                    Connection = Pages.Connection(CON,ParsedOptions)
 
                                     #Now we begin websocket
                                     try:
-                                        MyPage.acceptConnection(CON)
-                                        MyPage.websocket(ParsedOptions)
+                                        MyPage.websocket(Connection)
                                     except OSError:
                                         print(IDENTIFIER,"Websocket Died")
                                 else:
@@ -120,8 +124,8 @@ class webServer:
                         #Otherwise Handle HTTP
                         else:
                             #Respond with the requested resource
-                            MyPage.acceptConnection(CON)
-                            MyPage.connect(ParsedOptions)
+
+                            MyPage.connect(Connection)
 
                     #Otherwise, handle it
                     else:
@@ -129,22 +133,21 @@ class webServer:
                         if self.CatchallPage is not None:
                             #Server Catchall page
                             print(IDENTIFIER,"Redirect to Catchall")
-                            self.CatchallPage.acceptConnection(CON)
-                            self.CatchallPage.connect(ParsedOptions)
+                            self.CatchallPage.connect(Connection)
 
                         else:
                             #The Default 404 Handler
                             print(IDENTIFIER,"404 for",ParsedOptions.getResource())
                             page = DefaultErrors.e404(None)
-                            page.acceptConnection(CON)
-                            page.connect(ParsedOptions)
+
+                            page.connect(Connection)
 
                 except Exception as E:
                     #The Default 500 Handler
                     print(ID,"ERROR 500",E)
                     page = DefaultErrors.e500(None)
-                    page.acceptConnection(CON)
-                    page.connect(ParsedOptions)
+
+                    page.connect(Connection)
                     raise
                     
 

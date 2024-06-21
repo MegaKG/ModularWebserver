@@ -4,9 +4,9 @@ import Pages
 
 #Refer to Pages
 class page(Pages.webpage):
-    def connect(self,Request):
-        self.sendCode(200)
-        self.sendLength(24) # This is important if the connection isn't closed
-        self.sendType("text/html")
+    def connect(self,Request: Pages.Connection):
+        Request.sendCode(200)
+        Request.sendLength(24) # This is important if the connection isn't closed
+        Request.sendType("text/html")
 
-        self.print("<html>Hello World</html>")
+        Request.print("<html>Hello World</html>")

@@ -7,27 +7,27 @@ import base64
 class page(Pages.webpage):
 
     #Types = Basic, 
-    def _requestAuth(self,authType,realm):
-        self.sendCode(401)
-        self.sendHeader("WWW-Authenticate", "{} realm=\"{}\"".format(authType, realm))
-        self.sendType("text/html")
+    def _requestAuth(self,authType,realm, Request: Pages.Connection):
+        Request.sendCode(401)
+        Request.sendHeader("WWW-Authenticate", "{} realm=\"{}\"".format(authType, realm))
+        Request.sendType("text/html")
 
-        self.print("<html><body><h1>Not Authorised</h1></body></html>")
+        Request.print("<html><body><h1>Not Authorised</h1></body></html>")
 
-    def _notAuthorised(self):
-        self.sendCode(401)
-        self.sendType('text/html')
+    def _notAuthorised(self,Request: Pages.Connection):
+        Request.sendCode(401)
+        Request.sendType('text/html')
 
-        self.print("<html><body><h3>401, Not Authorised</h3></body></html>")
+        Request.print("<html><body><h3>401, Not Authorised</h3></body></html>")
 
-    def _invalidCred(self):
-        self.sendCode(401)
-        self.sendType('text/html')
+    def _invalidCred(self,Request: Pages.Connection):
+        Request.sendCode(401)
+        Request.sendType('text/html')
 
-        self.print("<html><body><h3>Invalid Credentials</h3></body></html>")
+        Request.print("<html><body><h3>Invalid Credentials</h3></body></html>")
 
-    def _getBasicAuthCreds(self,Request):
-        AuthData = Request.getHeader('Authorization')
+    def _getBasicAuthCreds(self,Request: Pages.Connection):
+        AuthData = Request.getRequestHeader().getHeader('Authorization')
         if AuthData != None:
             Type, Data = AuthData.split(' ')
             if Type.lower() == 'basic':
@@ -36,22 +36,22 @@ class page(Pages.webpage):
                 return Username,Password
         return None
 
-    def connect(self,Request):
+    def connect(self,Request: Pages.Connection):
         Credentials = self._getBasicAuthCreds(Request)
 
         if Credentials == None:
             #Start Authentication if none provided
-            self._requestAuth('Basic','Test')
+            self._requestAuth('Basic','Test',Request)
 
         else:
             if (Credentials[0] == 'test') and (Credentials[1] == 'user'):
-                self.sendCode(200)
-                self.sendType("text/html")
-                self.print("<html><body><h3>You're In!</h3></body></html>")
+                Request.sendCode(200)
+                Request.sendType("text/html")
+                Request.print("<html><body><h3>You're In!</h3></body></html>")
 
             else:
                 #User is not authenticated
-                self._invalidCred()
+                self._invalidCred(Request)
         
 
         
@@ -59,4 +59,4 @@ class page(Pages.webpage):
         
 
 
-        self.close()
+        Request.close()
