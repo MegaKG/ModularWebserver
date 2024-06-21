@@ -129,6 +129,7 @@ class webServer:
                         if self.CatchallPage is not None:
                             #Server Catchall page
                             print(IDENTIFIER,"Redirect to Catchall")
+                            self.CatchallPage.acceptConnection(CON)
                             self.CatchallPage.connect(ParsedOptions)
 
                         else:
